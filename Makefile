@@ -1,4 +1,4 @@
-project_name = pitaya
+project_name = fullstack-reason-react
 
 DUNE = opam exec -- dune
 opam_file = $(project_name).opam
@@ -49,6 +49,14 @@ install: create-switch pin
 
 .PHONY: init
 init: install
+
+.PHONY: docker-build
+docker-build:
+	docker build -t fullstack-reason-react .
+
+.PHONY: docker-run
+docker-run:
+	docker run -p 8080:8080 fullstack-reason-react
 
 .PHONY: demo
 demo: build
