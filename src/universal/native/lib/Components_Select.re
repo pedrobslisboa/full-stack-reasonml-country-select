@@ -14,7 +14,7 @@ let make =
       ~placeholder="Select a value",
       ~renderOption=?,
     ) => {
-  let buttonRef = React.useRef(Js.Nullable.null);
+  let inputRef = React.useRef(Js.Nullable.null);
   let dropdownRef = React.useRef(Js.Nullable.null);
   let (activeIndex, setActiveIndex) = React.useState(() => (-1));
   let (isOpen, setIsOpen) = React.useState(() => false);
@@ -123,7 +123,7 @@ let make =
       if (isOpen) {
         Option.map(
           el => Bindings.WebApi.Element.focus(el),
-          buttonRef.current |> Js.Nullable.toOption,
+          inputRef.current |> Js.Nullable.toOption,
         )
         |> ignore;
       };
@@ -170,7 +170,7 @@ let make =
         <img className="select_flag" src="/public/magnify-glass.svg" />
         <input
           ariaLabel="Search"
-          ref={ReactDOM.Ref.domRef(buttonRef)}
+          ref={ReactDOM.Ref.domRef(inputRef)}
           type_="text"
           name="search"
           placeholder="Search"
