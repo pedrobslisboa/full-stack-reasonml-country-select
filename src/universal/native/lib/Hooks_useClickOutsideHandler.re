@@ -5,16 +5,16 @@ let make =
     ) =>
   React.useEffect2(
     () => {
-      let listener = _e => {
+      let listener = e => {
         switch (reference.current |> Js.Nullable.toOption) {
         | None => ()
         | Some(refValue) =>
           if (!
-                Bindings.WebApi.Element.contains(
+                Bindings.WebApi.Node.contains(
                   refValue,
-                  Bindings.Event.Form.target(_e),
+                  Bindings.Event.Form.target(e),
                 )) {
-            handler(_e);
+            handler(e);
           }
         };
       };

@@ -38,10 +38,10 @@ module String = {
 };
 
 type nullable('a) = option('a);
-type null(+'a) = option('a);
+type null('a) = option('a);
 
 module Nullable = {
-  type t(+'a) = nullable('a);
+  type t('a) = nullable('a);
   let null = None;
 
   external toOption: null('a) => option('a) = "%identity";
