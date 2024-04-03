@@ -1,0 +1,41 @@
+opam-version: "2.0"
+maintainer: ["Pedro B S Lisboa <pedrobslisboa@gmail.com>"]
+authors: ["Pedro B S Lisboa <pedrobslisboa@gmail.com>"]
+synopsis: "Um projeto full-stack ReasonML para seleção de países"
+description: ""
+homepage: "https://example.com/project-homepage"
+bug-reports: "https://example.com/project-homepage/issues"
+license: "MIT"
+depends: [
+  "dune" {>= "3.8"}
+  "ocaml" {>= "5.0.0"}
+  "reason" {>= "3.10.0"}
+  "melange" {= "2.0.0"}
+  "dream"
+  "lambdasoup"
+  "reason-react-ppx"
+  "yojson"
+  "reason-react" {>= "0.13.0"}
+  "lwt" {>= "5.7.0"}
+  "cohttp-lwt-unix" {>= "5.3.1"}
+  "fmt" {with-test}
+  "ocamlformat" {= "0.26.1" & with-test}
+  "melange-testing-library" {with-test}
+  "melange-jest" {with-test}
+  "ocaml-lsp-server" {with-test}
+
+]
+build: [
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+]
