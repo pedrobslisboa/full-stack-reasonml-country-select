@@ -21,7 +21,4 @@
    server-reason-react.melange_ppx
    server-reason-react.browser_ppx)))
 
-(alias
- (name shared_native_demo))
-
 (copy_files# "../*.re")
