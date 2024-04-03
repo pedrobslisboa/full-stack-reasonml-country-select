@@ -19,7 +19,7 @@ module Node = {
   type t('a) = 'a;
 
   [@mel.send] external contains: (t('a), t('a)) => bool = "contains";
-}
+};
 
 module Document = {
   external addEventListener: (string, 'a => unit) => unit =

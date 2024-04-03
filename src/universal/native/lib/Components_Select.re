@@ -14,23 +14,19 @@ let make =
       ~placeholder="Select a value",
       ~renderOption=?,
     ) => {
-  let inputRef = React.useRef(Js.Nullable.null);
+  let buttonRef = React.useRef(Js.Nullable.null);
   let dropdownRef = React.useRef(Js.Nullable.null);
+
   let (activeIndex, setActiveIndex) = React.useState(() => (-1));
   let (isOpen, setIsOpen) = React.useState(() => false);
   let (searchValue, setSearchValue) = React.useState(() => "");
+
   let selectedOption =
     switch (currentValue) {
     | Some(value) =>
       List.find_opt((option: optionRec) => option.value == value, options)
     | None => None
     };
-
-  Hooks.UseClickOutsideHandler.make(dropdownRef, _ =>
-    if (isOpen) {
-      setIsOpen(_ => false);
-    }
-  );
 
   let filteredOptions: list(optionRec) = {
     switch (searchValue) {
@@ -95,7 +91,7 @@ let make =
     setSearchValue(_ => searchValue);
   };
 
-  React.useEffect1(
+    React.useEffect1(
     () => {
       let scroolToActive = () => {
         let activeElement =
@@ -111,26 +107,36 @@ let make =
         };
       };
 
-      scroolToActive();
+      if(activeIndex >= 0) {
+        scroolToActive();
+      }
 
       None;
     },
     [|activeIndex|],
   );
 
-  React.useEffect1(
-    () => {
-      if (isOpen) {
-        Option.map(
-          el => Bindings.WebApi.Element.focus(el),
-          inputRef.current |> Js.Nullable.toOption,
-        )
-        |> ignore;
-      };
 
-      None;
-    },
+  // auto focus on the search input when the dropdown is opened
+  // input autoFocus wasn't working there was some kind of type conflict.
+  React.useEffect1(() => {
+        if (isOpen) {
+          Option.map(
+            el => Bindings.WebApi.Element.focus(el),
+            buttonRef.current |> Js.Nullable.toOption,
+          )
+          |> ignore;
+        };
+
+        None;
+      },
     [|isOpen|],
+  );
+
+  Hooks.UseClickOutsideHandler.make(dropdownRef, _ =>
+    if (isOpen) {
+      setIsOpen(_ => false);
+    }
   );
 
   <div className={Utils.classNames(["select", className])}>
@@ -170,7 +176,7 @@ let make =
         <img className="select_flag" src="/public/magnify-glass.svg" />
         <input
           ariaLabel="Search"
-          ref={ReactDOM.Ref.domRef(inputRef)}
+          ref={ReactDOM.Ref.domRef(buttonRef)}
           type_="text"
           name="search"
           placeholder="Search"

@@ -1,6 +1,6 @@
 open Jest;
 
-[@mel.send] external not_ : JestDom.expect => JestDom.expect = "not";
+[@mel.send] external not_: JestDom.expect => JestDom.expect = "not";
 
 [%mel.raw "Element.prototype.scrollIntoView = jest.fn()"];
 [%mel.raw
@@ -19,13 +19,20 @@ module Component = {
   let make = () => {
     let result = Shared_js_demo.Hooks.UseGetCountries.make();
 
-      List.map(
-        (country:Shared_js_demo.Hooks.UseGetCountries.country)  =>
-          <div key={country.value}>
-            <h1> {country.label ++ " " ++ (country.population |> string_of_int) |> React.string} </h1>
-          </div>,
-        result.data,
-      ) |> Array.of_list |> React.array;
+    List.map(
+      (country: Shared_js_demo.Hooks.UseGetCountries.country) =>
+        <div key={country.value}>
+          <h1>
+            {country.label
+             ++ " "
+             ++ (country.population |> string_of_int)
+             |> React.string}
+          </h1>
+        </div>,
+      result.data,
+    )
+    |> Array.of_list
+    |> React.array;
   };
 };
 
