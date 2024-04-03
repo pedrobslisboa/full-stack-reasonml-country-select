@@ -14,6 +14,13 @@ This is a simple country select component built with Reasonml and React. It uses
 
 It work as a sample project to show how to build a simple component with Reasonml and React, with a native Reasonml server.
 
+This project uses the following main libraries:
+
+- reasnml
+- reason-react
+- server-reason-react
+- melange
+
 ## Installation
 
 ```sh
@@ -45,4 +52,6 @@ MIT
 ## Improvements
 
 - Usage of UniversalPortal for the Select dropdown, avoiding problems with z-index and overflow.
+- CSS modules or Styled components for better styling. (Maybe styled-ppx)
+- Better error handling on server side.
 
