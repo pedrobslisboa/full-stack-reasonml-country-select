@@ -1,0 +1,27 @@
+(include_subdirs unqualified)
+
+(library
+ (name shared_native_demo)
+ (modules :standard)
+ (libraries
+  str
+  server-reason-react.react
+  server-reason-react.reactDom
+  universal-portal.shared_native
+  uri
+  cohttp
+  cohttp-lwt
+  yojson
+  lwt
+  lwt.unix
+  cohttp-lwt-unix)
+ (preprocess
+  (pps
+   server-reason-react.ppx
+   server-reason-react.melange_ppx
+   server-reason-react.browser_ppx)))
+
+(alias
+ (name shared_native_demo))
+
+(copy_files# "../*.re")
