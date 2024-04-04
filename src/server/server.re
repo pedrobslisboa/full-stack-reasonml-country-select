@@ -41,6 +41,16 @@ let handler =
     Dream.get("**", _ => Dream.html(indexFileString)),
   ]);
 
-let interface = "0.0.0.0";
+let interface =
+  switch (Sys.getenv_opt("SERVER_INTERFACE")) {
+  | Some(env) => env
+  | None => "localhost"
+  };
 
-Dream.run(~port=8000, ~interface, handler);
+let port =
+  switch (Sys.getenv_opt("PORT")) {
+  | Some(v) => v |> int_of_string
+  | None => 8000
+  };
+
+Dream.run(~port, ~interface, handler);
