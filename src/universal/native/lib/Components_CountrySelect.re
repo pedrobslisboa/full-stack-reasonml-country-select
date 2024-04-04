@@ -6,7 +6,7 @@ module CountryFlag = {
 };
 
 [@react.component]
-let make = (~onChange, ~value, ~className="") => {
+let make = (~onChange, ~country, ~className="") => {
   let {data, loading, error}: Hooks.UseGetCountries.return =
     Hooks.UseGetCountries.make();
 
@@ -29,12 +29,12 @@ let make = (~onChange, ~value, ~className="") => {
       ? <Components_Select
           className
           prefix={
-            switch (value) {
+            switch (country) {
             | Some(v) => <CountryFlag country=v />
             | None => React.null
             }
           }
-          value
+          value=country
           placeholder="Select a country"
           onChange=handleChange
           options

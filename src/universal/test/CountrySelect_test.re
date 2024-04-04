@@ -22,7 +22,7 @@ module Component = {
       React.useState(() => initialValue);
 
     <Shared_js_demo.Components.CountrySelect
-      value=selectedOption
+      country=selectedOption
       onChange={value => {
         switch (onChange) {
         | Some(onChange) => onChange(value)

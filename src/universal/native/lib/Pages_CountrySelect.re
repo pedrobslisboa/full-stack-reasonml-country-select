@@ -14,7 +14,7 @@ let make = () => {
       <UniversalPortal_Shared.Portal selector="head">
         <title> {"Country Select" |> React.string} </title>
       </UniversalPortal_Shared.Portal>
-      <Components.CountrySelect value=selectedCountry onChange />
+      <Components.CountrySelect country=selectedCountry onChange />
     </div>
   </Components.Layout>;
 };
