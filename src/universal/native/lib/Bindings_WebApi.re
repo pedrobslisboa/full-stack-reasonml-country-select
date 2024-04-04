@@ -2,11 +2,6 @@
 module Element = {
   type t('a) = 'a;
 
-  type scrollIntoViewOptions = {
-    block: option(string),
-    behavior: option(string),
-  };
-
   [@mel.return nullable]
   external querySelector: string => option(t('a)) = "document.querySelector";
   [@mel.send] external scrollIntoView: (t('a), 'a) => unit = "scrollIntoView";
