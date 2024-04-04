@@ -1,5 +1,5 @@
 type return = {
-  data: option(Json.t),
+  data: option(Bindings.Json.t),
   loading: bool,
   error: option(string),
 };
@@ -12,7 +12,7 @@ let make = url => {
   React.useEffect1(
     () => {
       let fetch = () =>
-        Js.Promise.(
+        Bindings.Js.Promise.(
           Bindings.Fetch.fetch(url)
           |> then_(response =>
                try(response |> Bindings.Fetch.Response.json) {

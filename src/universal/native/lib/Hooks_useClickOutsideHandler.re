@@ -1,12 +1,12 @@
 let make =
     (
-      reference: React.ref(Js.Nullable.t(Bindings.WebApi.Element.t('a))),
+      reference: React.ref(Bindings.Js.Nullable.t(Bindings.WebApi.Element.t('a))),
       handler,
     ) =>
   React.useEffect2(
     () => {
       let listener = e => {
-        switch (reference.current |> Js.Nullable.toOption) {
+        switch (reference.current |> Bindings.Js.Nullable.toOption) {
         | None => ()
         | Some(refValue) =>
           if (!

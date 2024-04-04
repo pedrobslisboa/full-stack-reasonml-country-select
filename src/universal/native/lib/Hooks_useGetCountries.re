@@ -10,16 +10,16 @@ type return = {
   loading: bool,
 };
 
-let decodeCountry: Json.t => country =
+let decodeCountry: Bindings.Json.t => country =
   json =>
-    Json.Decode.{
+    Bindings.Json.Decode.{
       label: json |> field("label", string),
       value: json |> field("value", string),
       population: json |> field("population", int),
     };
 
-let decodeCountryList: Json.t => list(country) =
-  json => json |> Json.Decode.list(decodeCountry);
+let decodeCountryList: Bindings.Json.t => list(country) =
+  json => json |> Bindings.Json.Decode.list(decodeCountry);
 
 let make = () => {
   let result = Hooks_useFetch.make("/api/countries");

@@ -14,8 +14,8 @@ let make =
       ~placeholder="Select a value",
       ~renderOption=?,
     ) => {
-  let buttonRef = React.useRef(Js.Nullable.null);
-  let dropdownRef = React.useRef(Js.Nullable.null);
+  let buttonRef = React.useRef(Bindings.Js.Nullable.null);
+  let dropdownRef = React.useRef(Bindings.Js.Nullable.null);
 
   let (activeIndex, setActiveIndex) = React.useState(() => (-1));
   let (isOpen, setIsOpen) = React.useState(() => false);
@@ -34,7 +34,7 @@ let make =
     | _ =>
       List.filter(
         (option: optionRec) => {
-          Js.String.includes(
+          Bindings.Js.String.includes(
             searchValue |> String.trim |> String.lowercase_ascii,
             String.lowercase_ascii(option.label),
           )
@@ -91,7 +91,7 @@ let make =
     setSearchValue(_ => searchValue);
   };
 
-    React.useEffect1(
+  React.useEffect1(
     () => {
       let scroolToActive = () => {
         let activeElement =
@@ -107,29 +107,29 @@ let make =
         };
       };
 
-      if(activeIndex >= 0) {
+      if (activeIndex >= 0) {
         scroolToActive();
-      }
+      };
 
       None;
     },
     [|activeIndex|],
   );
 
-
   // auto focus on the search input when the dropdown is opened
   // input autoFocus wasn't working there was some kind of type conflict.
-  React.useEffect1(() => {
-        if (isOpen) {
-          Option.map(
-            el => Bindings.WebApi.Element.focus(el),
-            buttonRef.current |> Js.Nullable.toOption,
-          )
-          |> ignore;
-        };
+  React.useEffect1(
+    () => {
+      if (isOpen) {
+        Option.map(
+          el => Bindings.WebApi.Element.focus(el),
+          buttonRef.current |> Bindings.Js.Nullable.toOption,
+        )
+        |> ignore;
+      };
 
-        None;
-      },
+      None;
+    },
     [|isOpen|],
   );
 

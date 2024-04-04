@@ -4,15 +4,6 @@ module Promise = {
   type t('a) = Lwt.t('a);
   type error = exn;
 
-  let make =
-      (fn: (~resolve: 'a => unit, ~reject: exn => unit) => unit): t('a) => {
-    let (promise, resolver) = Lwt.task();
-    let resolve = value => Lwt.wakeup_later(resolver, value);
-    let reject = exn => Lwt.wakeup_later_exn(resolver, exn);
-    fn(~resolve, ~reject);
-    promise;
-  };
-
   let resolve = Lwt.return;
   let reject = Lwt.fail;
 
@@ -30,10 +21,6 @@ module String = {
     | exception Not_found => false
     | _ => true
     };
-  };
-
-  let toLowerCase = str => {
-    str |> String.lowercase_ascii;
   };
 };
 
