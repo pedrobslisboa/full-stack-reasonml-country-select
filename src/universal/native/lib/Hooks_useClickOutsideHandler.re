@@ -1,6 +1,7 @@
 let make =
     (
-      reference: React.ref(Bindings.Js.Nullable.t(Bindings.WebApi.Element.t('a))),
+      reference:
+        React.ref(Bindings.Js.Nullable.t(Bindings.WebApi.Element.t('a))),
       handler,
     ) =>
   React.useEffect2(

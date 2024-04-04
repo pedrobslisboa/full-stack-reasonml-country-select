@@ -14,8 +14,11 @@ global.fetch = jest.fn(() =>
 
 type request = {value: string};
 
-let decodeReq: Shared_js_demo.Json.t => request =
-  json => Shared_js_demo.Json.Decode.{value: json |> field("value", string)};
+let decodeReq: Shared_js_demo.Bindings.Json.t => request =
+  json =>
+    Shared_js_demo.Bindings.Json.Decode.{
+      value: json |> field("value", string),
+    };
 
 module Component = {
   [@react.component]

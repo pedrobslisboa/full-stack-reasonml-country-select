@@ -52,7 +52,7 @@ docker-run:
 	docker run -p 8080:8080 fullstack-reason-react
 
 .PHONY: run
-demo: build
+run: build
 	yarn webpack
 	$(DUNE) exec src/server/server.exe
 
