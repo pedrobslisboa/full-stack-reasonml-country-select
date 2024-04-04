@@ -78,7 +78,7 @@ let make =
       | option =>
         ReactEvent.Keyboard.preventDefault(e);
         onChange(Some(option.value));
-        setIsOpen(prev => !prev);
+        setIsOpen(_ => false);
       }
     | _ => ()
     };
@@ -91,9 +91,27 @@ let make =
     setSearchValue(_ => searchValue);
   };
 
+  let handleToggle = () => {
+    if (isOpen) {
+      Option.map(
+        el => Bindings.WebApi.Element.focus(el),
+        buttonRef.current |> Bindings.Js.Nullable.toOption,
+      )
+      |> ignore;
+    };
+
+    setIsOpen(prevOpen => !prevOpen);
+  };
+
+  Hooks.UseClickOutsideHandler.make(dropdownRef, _ =>
+    if (isOpen) {
+      setIsOpen(_ => false);
+    }
+  );
+
   React.useEffect1(
     () => {
-      let scroolToActive = () => {
+       if (activeIndex >= 0) {
         let activeElement =
           Bindings.WebApi.Element.querySelector("li[aria-selected=true]");
 
@@ -107,36 +125,9 @@ let make =
         };
       };
 
-      if (activeIndex >= 0) {
-        scroolToActive();
-      };
-
       None;
     },
     [|activeIndex|],
-  );
-
-  // auto focus on the search input when the dropdown is opened
-  // input autoFocus wasn't working there was some kind of type conflict.
-  React.useEffect1(
-    () => {
-      if (isOpen) {
-        Option.map(
-          el => Bindings.WebApi.Element.focus(el),
-          buttonRef.current |> Bindings.Js.Nullable.toOption,
-        )
-        |> ignore;
-      };
-
-      None;
-    },
-    [|isOpen|],
-  );
-
-  Hooks.UseClickOutsideHandler.make(dropdownRef, _ =>
-    if (isOpen) {
-      setIsOpen(_ => false);
-    }
   );
 
   <div className={Utils.classNames(["select", className])}>
@@ -158,7 +149,7 @@ let make =
       }
       onKeyDown=handleKeyDown
       className="select_button"
-      onClick={_ => {setIsOpen(prevOpen => !prevOpen)}}
+      onClick={_ => handleToggle()}
       role="combobox">
       prefix
       <span className="select_label">
@@ -203,7 +194,7 @@ let make =
                 }
                 value={option.value}
                 active={activeIndex == index}
-                onActive={_ => setActiveIndex(_ => index)}
+                onMouseOver={_ => setActiveIndex(_ => index)}
                 onChange=handleChange>
                 {switch (renderOption) {
                  | Some(renderOption) => renderOption(option)

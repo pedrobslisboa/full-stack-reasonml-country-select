@@ -41,7 +41,7 @@ let make = (~onChange, ~value, ~className="") => {
           renderOption={({value, label}: Components_Select.optionRec) =>
             <>
               <CountryFlag country=value />
-              <span> {React.string(label)} </span>
+              <span> {label |> React.string} </span>
               <span className="country_population">
                 {Utils.formatPopulation(
                    data
