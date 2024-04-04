@@ -54,4 +54,5 @@ MIT
 - Usage of UniversalPortal for the Select dropdown, avoiding problems with z-index and overflow.
 - CSS modules or Styled components for better styling. (Maybe styled-ppx)
 - Better error handling on server side.
+- Create useCombobox hook to handle the select logic.
 
