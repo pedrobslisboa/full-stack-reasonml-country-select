@@ -66,4 +66,4 @@ RUN yarn webpack --env production
 EXPOSE 8000
 
 # CMD ["opam" exec -- dune exec src/server/server.exe"]
-CMD ["opam", "exec", "--", "dune", "exec", "src/server/server.exe"]
+CMD ["_build/default/src/server/server.exe"]
