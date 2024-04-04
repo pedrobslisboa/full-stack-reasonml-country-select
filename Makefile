@@ -15,16 +15,12 @@ help:
 build:
 	$(DUNE) build @all
 
-.PHONY: build-prod
-build-prod:
-	$(DUNE) build --profile=prod @all
-
 .PHONY: build-dev
 dev:
 	$(DUNE) build -w @all
 
 .PHONY: clean
-clean: ## Clean artifacts
+clean:
 	$(DUNE) clean
 
 .PHONY: format
@@ -47,9 +43,6 @@ create-switch:
 .PHONY: install
 install: create-switch pin
 
-.PHONY: init
-init: install
-
 .PHONY: docker-build
 docker-build:
 	docker build -t fullstack-reason-react .
@@ -58,7 +51,7 @@ docker-build:
 docker-run:
 	docker run -p 8080:8080 fullstack-reason-react
 
-.PHONY: demo
+.PHONY: run
 demo: build
 	yarn webpack
 	$(DUNE) exec src/server/server.exe

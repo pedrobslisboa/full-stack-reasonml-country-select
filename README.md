@@ -36,7 +36,7 @@ With docker:
 ## Usage
 
 ```sh
-    Make demo
+    Make run
 ```
 
 With docker:
