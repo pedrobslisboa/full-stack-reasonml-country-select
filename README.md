@@ -51,8 +51,24 @@ MIT
 
 ## Improvements
 
+- Increase test coverage.
+- Increase custom Bindings.
 - Usage of UniversalPortal for the Select dropdown, avoiding problems with z-index and overflow.
 - CSS modules or Styled components for better styling. (Maybe styled-ppx)
 - Better error handling on server side.
-- Create useCombobox hook to handle the select logic.
+- Create useCombobox hook to handle the select logic, the Select component has too much logic.
+
+Something like:
+
+```
+type useCombobox: (~options: list('a), onActiveIndex: int => unit, ~onSelect: 'a => unit, ~onOpen: unit => unit, ~onClose: unit=> unit) => {
+    activeIndex: int,
+    isOpen: bool,
+    open: unit => unit,
+    close: unit => unit,
+    inputProps: {|..|},
+    listboxProps: {|..|},
+    optionProps: int => {|..|},
+}
+```
 
