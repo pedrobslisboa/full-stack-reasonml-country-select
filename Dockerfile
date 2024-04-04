@@ -55,12 +55,12 @@ RUN opam install reason.3.10.0 --yes \
     && opam pin add server-reason-react "https://github.com/ml-in-barcelona/server-reason-react.git#d29790ffac08e2f4f3f8d65374ca76ebde334ab3" --yes \
     && opam pin add universal-portal "https://github.com/pedrobslisboa/universal-portal.git#main" --yes
 
-RUN yarn webpack --env production
-
 # Construir o projeto
 # Substitua o comando abaixo pelo necessário para construir seu projeto, se diferente
 RUN eval $(opam env) && \
     opam exec -- dune build --profile=prod @all
+
+RUN yarn webpack --env production
 
 # Expor a porta do servidor
 EXPOSE 8000
