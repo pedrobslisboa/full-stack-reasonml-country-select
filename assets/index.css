@@ -51,15 +51,8 @@ body {
 }
 
 .select_button:not([aria-expanded=true]) + .select_dropdown {
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
-
-.select_label {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  transform: scaleY(0);
+  transform-origin: top left;
 }
 
 .caret-down {
@@ -68,13 +61,10 @@ body {
 
 .select_list_options {
   width: 100%;
-  max-width: 230px;
-  max-height: 300px;
   overflow-y: scroll;
   padding: 0;
   margin: 0;
   background-color: white;
-  padding-top: 4px;
 }
 
 .select_list_option {
@@ -84,16 +74,30 @@ body {
   color: #393939;
   cursor: pointer;
   list-style: none;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-.select_flag {
+.country_flag {
   height: 1em;
+  width: 1.5em;
+  aspect-ratio: 16 / 9;
+}
+
+.country_name, .select_label {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .country_population {
   margin-left: auto;
   color: #00000085;
+}
 
+.country_flag {
+  margin-right: 8px;
 }
 
 .country_option {
@@ -121,6 +125,10 @@ body {
   box-shadow: 0px 3px 18px 0px #00000026; 
   border-radius: 2px;
   border: 1px solid #00000014;
+}
+
+.country_dropdown {
+  width: 300px;
 }
 
 .select_search {

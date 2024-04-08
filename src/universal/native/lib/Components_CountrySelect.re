@@ -1,7 +1,9 @@
 module CountryFlag = {
   [@react.component]
   let make = (~country) => {
-    <span className={Utils.classNames(["fi", "fi-" ++ country])} />;
+    <span
+      className={Utils.classNames(["fi", "fi-" ++ country, "country_flag"])}
+    />;
   };
 };
 
@@ -28,6 +30,9 @@ let make = (~onChange, ~country, ~className="") => {
     !loading
       ? <Components_Select
           className
+          itemHeight=28
+          visibleItems=10
+          dropdownClassName="country_dropdown"
           prefix={
             switch (country) {
             | Some(v) => <CountryFlag country=v />
@@ -41,7 +46,7 @@ let make = (~onChange, ~country, ~className="") => {
           renderOption={({value, label}: Components_Select.optionRec) =>
             <>
               <CountryFlag country=value />
-              <span> {label |> React.string} </span>
+              <span className="country_name"> {label |> React.string} </span>
               <span className="country_population">
                 {Utils.formatPopulation(
                    data

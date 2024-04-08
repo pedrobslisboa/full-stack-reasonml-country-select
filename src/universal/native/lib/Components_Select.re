@@ -3,6 +3,16 @@ type optionRec = {
   label: string,
 };
 
+module Combobox = {
+  type item = optionRec;
+};
+
+module Spread = {
+  [@react.component]
+  let make = (~props, ~children) => React.cloneElement(children, props);
+};
+module UseVirtualizedCombobox = Hooks.UseVirtualizedCombobox.Make(Combobox);
+
 [@react.component]
 let make =
     (
@@ -10,16 +20,29 @@ let make =
       ~value as currentValue=None,
       ~options,
       ~className="",
+      ~dropdownClassName="",
+      ~listClassName="",
       ~prefix=React.null,
       ~placeholder="Select a value",
       ~renderOption=?,
+      ~visibleItems=10,
+      ~itemHeight=28,
     ) => {
-  let buttonRef = React.useRef(Bindings.Js.Nullable.null);
-  let dropdownRef = React.useRef(Bindings.Js.Nullable.null);
-
-  let (activeIndex, setActiveIndex) = React.useState(() => (-1));
-  let (isOpen, setIsOpen) = React.useState(() => false);
-  let (searchValue, setSearchValue) = React.useState(() => "");
+  let combobox =
+    UseVirtualizedCombobox.make(
+      ~options,
+      ~onChange=
+        (option: option(optionRec)) => {
+          switch (option) {
+          | Some(value) => onChange(Some(value.value))
+          | None => onChange(None)
+          }
+        },
+      ~itemToString=option => option.label,
+      ~itemHeight,
+      ~visibleItems,
+      (),
+    );
 
   let selectedOption =
     switch (currentValue) {
@@ -28,128 +51,33 @@ let make =
     | None => None
     };
 
-  let filteredOptions: list(optionRec) = {
-    switch (searchValue) {
-    | "" => options
-    | _ =>
-      List.filter(
-        (option: optionRec) => {
-          Bindings.Js.String.includes(
-            searchValue |> String.trim |> String.lowercase_ascii,
-            String.lowercase_ascii(option.label),
-          )
-        },
-        options,
-      )
-    };
-  };
-
-  let handleChange = e => {
-    onChange(Some(Bindings.Event.Form.target(e).value));
-    setIsOpen(_ => false);
-  };
-
-  let handleKeyDown = e => {
-    switch (Bindings.Event.Keyboard.key(e)) {
-    | "ArrowDown" =>
-      if (!isOpen) {
-        setIsOpen(_ => true);
-      };
-
-      setActiveIndex(prevIndex =>
-        prevIndex >= (filteredOptions |> List.length) - 1 ? 0 : prevIndex + 1
-      );
-    | "ArrowUp" =>
-      if (!isOpen) {
-        setIsOpen(_ => true);
-      };
-
-      setActiveIndex(prevIndex =>
-        prevIndex <= 0 ? (filteredOptions |> List.length) - 1 : prevIndex - 1
-      );
-    | "Esc" => setIsOpen(_ => false)
-    | "Backspace" =>
-      if (searchValue == "" || !isOpen) {
-        onChange(None);
-      }
-    | "Enter" =>
-      switch ((filteredOptions |> Array.of_list)[activeIndex]) {
-      | exception (Invalid_argument(_)) => ()
-      | option =>
-        ReactEvent.Keyboard.preventDefault(e);
-        onChange(Some(option.value));
-        setIsOpen(_ => false);
-      }
-    | _ => ()
-    };
-  };
-
-  let onSearchChange = e => {
-    let searchValue = Bindings.Event.Form.target(e).value;
-
-    setActiveIndex(_ => (-1));
-    setSearchValue(_ => searchValue);
-  };
-
-  let handleToggle = () => {
-    if (isOpen) {
-      Option.map(
-        el => Bindings.WebApi.Element.focus(el),
-        buttonRef.current |> Bindings.Js.Nullable.toOption,
-      )
-      |> ignore;
+  let stringValue =
+    switch (currentValue) {
+    | Some(value) => value
+    | None => ""
     };
 
-    setIsOpen(prevOpen => !prevOpen);
-  };
+  let buttonProps = combobox.getButtonProps();
+  let inputProps = combobox.getInputProps();
+  let dropdownProps = combobox.getDropdownProps();
 
-  Hooks.UseClickOutsideHandler.make(dropdownRef, _ =>
-    if (isOpen) {
-      setIsOpen(_ => false);
-    }
-  );
-
-  React.useEffect1(
-    () => {
-       if (activeIndex >= 0) {
-        let activeElement =
-          Bindings.WebApi.Element.querySelector("li[aria-selected=true]");
-
-        switch (activeElement) {
-        | None => ()
-        | Some(activeElement) =>
-          Bindings.WebApi.Element.scrollIntoView(
-            activeElement,
-            {"block": "nearest", "behavior": "smooth"},
-          )
-        };
-      };
-
-      None;
-    },
-    [|activeIndex|],
-  );
+  let virtualizedContainerProps =
+    combobox.virtualizedList.getVirtualizedContainerProps();
+  let virtualizedListWrapperProps =
+    combobox.virtualizedList.getVirtualizedListWrapperProps();
+  let virtualizedListProps =
+    combobox.virtualizedList.getVirtualizedListProps();
 
   <div className={Utils.classNames(["select", className])}>
     <button
       ariaHaspopup="listbox"
       ariaControls="dropdown"
-      ariaExpanded=isOpen
-      value={
-        switch (currentValue) {
-        | None => ""
-        | Some(value) => value
-        }
-      }
-      ariaActivedescendant={
-        switch (currentValue) {
-        | None => ""
-        | Some(value) => value
-        }
-      }
-      onKeyDown=handleKeyDown
+      ariaExpanded={combobox.isOpen}
+      value=stringValue
+      ariaActivedescendant=stringValue
+      onKeyDown={buttonProps.onKeyDown}
       className="select_button"
-      onClick={_ => handleToggle()}
+      onClick={buttonProps.onClick}
       role="combobox">
       prefix
       <span className="select_label">
@@ -162,49 +90,70 @@ let make =
       </span>
       <img className="caret-down" src="/public/caret-down.svg" />
     </button>
-    <div ref={ReactDOM.Ref.domRef(dropdownRef)} className="select_dropdown">
+    <div
+      ref={ReactDOM.Ref.domRef(dropdownProps.ref)}
+      className={Utils.classNames(["select_dropdown", dropdownClassName])}>
       <label className="select_search">
         <img className="select_flag" src="/public/magnify-glass.svg" />
         <input
           ariaLabel="Search"
-          ref={ReactDOM.Ref.domRef(buttonRef)}
           type_="text"
           name="search"
           placeholder="Search"
-          onKeyDown=handleKeyDown
-          onChange=onSearchChange
-          value=searchValue
+          onKeyDown={inputProps.onKeyDown}
+          ref={ReactDOM.Ref.domRef(inputProps.ref)}
+          onChange={inputProps.onChange}
+          value={inputProps.value}
         />
       </label>
-      <ul
-        className="select_list_options"
-        id="dropdown"
-        role="listbox"
-        tabIndex=(-1)>
-        {filteredOptions
-         |> List.mapi((index, option: optionRec) =>
-              <Components_SelectOption
-                key={option.value}
-                selected={
-                  switch (selectedOption) {
-                  | Some(selectedOption) =>
-                    selectedOption.value == option.value
-                  | None => false
-                  }
-                }
-                value={option.value}
-                active={activeIndex == index}
-                onMouseOver={_ => setActiveIndex(_ => index)}
-                onChange=handleChange>
-                {switch (renderOption) {
-                 | Some(renderOption) => renderOption(option)
-                 | None => option.label |> React.string
-                 }}
-              </Components_SelectOption>
-            )
-         |> Array.of_list
-         |> React.array}
-      </ul>
+      <div
+        style={virtualizedContainerProps.style}
+        onScroll={virtualizedContainerProps.onScroll}
+        ref={virtualizedContainerProps.ref}>
+        <div style={virtualizedListWrapperProps.style}>
+          <ul
+            style={virtualizedListProps.style}
+            className={Utils.classNames([
+              "select_list_options",
+              listClassName,
+            ])}
+            id="dropdown"
+            role="listbox"
+            tabIndex=(-1)>
+            {combobox.virtualizedList.visibleItems
+             |> List.mapi((index, option: optionRec) => {
+                  let virtualizedOptionProps =
+                    combobox.virtualizedList.getVirtualizedOptionProps(index);
+
+                  <Components_SelectOption
+                    style={ReactDOM.Style.make(
+                      ~height=(itemHeight |> string_of_int) ++ "px",
+                      (),
+                    )}
+                    key={option.value}
+                    selected={
+                      switch (selectedOption) {
+                      | Some(selectedOption) =>
+                        selectedOption.value == option.value
+                      | None => false
+                      }
+                    }
+                    value={option.value}
+                    active={virtualizedOptionProps.ariaSelected}
+                    onClick={_ => combobox.close()}
+                    onMouseOver={virtualizedOptionProps.onMouseOver}
+                    onChange={_ => combobox.handleChange(index)}>
+                    {switch (renderOption) {
+                     | Some(renderOption) => renderOption(option)
+                     | None => option.label |> React.string
+                     }}
+                  </Components_SelectOption>;
+                })
+             |> Array.of_list
+             |> React.array}
+          </ul>
+        </div>
+      </div>
     </div>
   </div>;
 };

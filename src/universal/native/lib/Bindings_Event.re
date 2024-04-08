@@ -10,3 +10,13 @@ module Keyboard = {
 
   [@mel.get] external key: t => string = "key";
 };
+
+module UI = {
+  type t = ReactEvent.UI.t;
+
+  [@mel.get] external target: t => Bindings_WebApi.Element.t('a) = "target";
+};
+
+module Mouse = {
+  type t = ReactEvent.Mouse.t;
+};
