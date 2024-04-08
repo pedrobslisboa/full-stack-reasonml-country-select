@@ -4,9 +4,8 @@ let route = "/";
 let make = () => {
   let (selectedCountry, setSelectedCountry) = React.useState(() => None);
 
-  setSelectedCountry |> ignore;
-  let%browser_only onChange = _value => {
-    setSelectedCountry(_ => _value);
+  let onChange = value => {
+    setSelectedCountry(_ => value);
   };
 
   <Components.Layout>
