@@ -3,3 +3,4 @@ _opam/
 node_modules/
 public/
 .DS_Store
+.env
