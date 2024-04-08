@@ -71,11 +71,11 @@ module Component = {
   };
 };
 
-describe("Select", () => {
+describe("useVirtualizedCombobox", () => {
   open ReactTestingLibrary;
   open JestDom;
 
-  test("must return decoded country data", () => {
+  test("must return list", () => {
     let selectComponent = <Component onChange={_ => ()} />;
     let result = selectComponent |> render;
 

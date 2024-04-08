@@ -54,10 +54,10 @@ module Component = {
   };
 };
 
-describe("Select", () => {
+describe("useFetch", () => {
   ReactTestingLibrary.(
     JestDom.(
-      testPromise("must render Select", () => {
+      testPromise("must return valid values", () => {
         let selectComponent = <Component />;
         let result = selectComponent |> render;
 

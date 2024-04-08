@@ -34,11 +34,11 @@ module Component = {
   };
 };
 
-describe("Select", () => {
+describe("CountrySelect", () => {
   open ReactTestingLibrary;
   open JestDom;
 
-  testPromise("must render Select", () => {
+  testPromise("must render CountrySelect", () => {
     let selectComponent = <Component initialValue="3" />;
     let result = selectComponent |> render;
 

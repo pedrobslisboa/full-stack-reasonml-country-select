@@ -36,7 +36,7 @@ module Component = {
   };
 };
 
-describe("Select", () => {
+describe("useGetCountries", () => {
   ReactTestingLibrary.(
     JestDom.(
       testPromise("must return decoded country data", () => {

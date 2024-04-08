@@ -66,11 +66,11 @@ module Component = {
   };
 };
 
-describe("Select", () => {
+describe("useVirtualizedList", () => {
   open ReactTestingLibrary;
   open JestDom;
 
-  test("must return decoded country data", () => {
+  test("must return list", () => {
     let selectComponent = <Component onSelect={_ => ()} />;
     let result = selectComponent |> render;
 
