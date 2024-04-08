@@ -66,6 +66,7 @@ module Make = (M: S) => {
       if (preventScroll.current) {
         preventScroll.current = false;
       } else {
+        setActiveIndex(_ => -1);
         setScrollTop(_ => Bindings.Event.UI.target(event)##scrollTop);
       };
 
